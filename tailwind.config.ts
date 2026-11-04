@@ -1,63 +1,82 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
-const config: Config = {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+/**
+ * Кольори оголошені через CSS-змінні (див. src/styles.css), тож перемикання
+ * теми — це зміна одного атрибута на <html>, без дублювання класів у розмітці.
+ * Формат `rgb(var(--x) / <alpha-value>)` дозволяє Tailwind-прозорості
+ * штибу `bg-accent/10` працювати зі змінними.
+ */
+const withAlpha = (name: string) => `rgb(var(${name}) / <alpha-value>)`;
+
+export default {
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        canvas: "#f7f7f5",
-        surface: "#ffffff",
-        line: "#e8e8e4",
+        canvas: withAlpha('--c-canvas'),
+        surface: withAlpha('--c-surface'),
+        elevated: withAlpha('--c-elevated'),
+        line: withAlpha('--c-line'),
         ink: {
-          DEFAULT: "#1c1c1a",
-          soft: "#5c5c58",
-          faint: "#94948e",
+          DEFAULT: withAlpha('--c-ink'),
+          soft: withAlpha('--c-ink-soft'),
+          faint: withAlpha('--c-ink-faint'),
         },
         accent: {
-          DEFAULT: "#3f6f5c",
-          soft: "#eef3f0",
+          DEFAULT: withAlpha('--c-accent'),
+          soft: withAlpha('--c-accent-soft'),
+          ink: withAlpha('--c-accent-ink'),
         },
-        positive: "#2f7d5f",
-        negative: "#c2554a",
-        warning: "#c08a2e",
+        income: withAlpha('--c-income'),
+        expense: withAlpha('--c-expense'),
+        debt: withAlpha('--c-debt'),
+        warn: withAlpha('--c-warn'),
       },
       fontFamily: {
         sans: [
-          "Inter",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
-          "Arial",
-          "sans-serif",
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'SF Pro Text',
+          'Segoe UI',
+          'Roboto',
+          'sans-serif',
         ],
       },
+      spacing: {
+        // Безпечні зони iPhone: під «чубчик» і під домашній індикатор.
+        'safe-t': 'env(safe-area-inset-top)',
+        'safe-b': 'env(safe-area-inset-bottom)',
+        // Висота нижньої навігації разом із safe-area.
+        nav: 'calc(4rem + env(safe-area-inset-bottom))',
+      },
       borderRadius: {
-        xl: "0.875rem",
-        "2xl": "1.125rem",
+        xl: '0.875rem',
+        '2xl': '1.25rem',
+        '3xl': '1.75rem',
       },
       boxShadow: {
-        card: "0 1px 2px rgba(28,28,26,0.04), 0 1px 12px rgba(28,28,26,0.03)",
-        pop: "0 8px 32px rgba(28,28,26,0.10)",
+        card: '0 1px 2px rgb(0 0 0 / 0.16)',
+        pop: '0 12px 40px rgb(0 0 0 / 0.32)',
+        glow: '0 6px 24px rgb(var(--c-accent) / 0.35)',
       },
       keyframes: {
-        "fade-in": {
-          from: { opacity: "0", transform: "translateY(4px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
+        'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
+        'slide-up': {
+          from: { transform: 'translateY(12px)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
         },
-        "scale-in": {
-          from: { opacity: "0", transform: "scale(0.97)" },
-          to: { opacity: "1", transform: "scale(1)" },
+        'sheet-in': {
+          from: { transform: 'translateY(100%)' },
+          to: { transform: 'translateY(0)' },
         },
       },
       animation: {
-        "fade-in": "fade-in 0.24s ease-out",
-        "scale-in": "scale-in 0.16s ease-out",
+        'fade-in': 'fade-in 0.18s ease-out',
+        'slide-up': 'slide-up 0.22s cubic-bezier(0.22, 1, 0.36, 1)',
+        'sheet-in': 'sheet-in 0.26s cubic-bezier(0.22, 1, 0.36, 1)',
       },
     },
   },
   plugins: [],
-};
-
-export default config;
+} satisfies Config;
