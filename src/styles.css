@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Теми живуть у CSS-змінних, а не в класах Tailwind, тому перемикання —
+  це зміна одного атрибута на <html>. Значення зберігаються каналами RGB,
+  щоб працювали прозорості штибу bg-accent/10.
+*/
+
+@layer base {
+  :root,
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+
+    --c-canvas: 11 13 18;
+    --c-surface: 18 21 29;
+    --c-elevated: 26 30 40;
+    --c-line: 37 42 54;
+
+    --c-ink: 232 234 240;
+    --c-ink-soft: 154 160 174;
+    --c-ink-faint: 110 117 133;
+
+    --c-accent: 72 118 248;
+    --c-accent-soft: 24 34 66;
+    --c-accent-ink: 255 255 255;
+
+    --c-income: 53 192 127;
+    --c-expense: 240 97 97;
+    --c-debt: 232 163 61;
+    --c-warn: 232 163 61;
+  }
+
+  :root[data-theme='light'] {
+    color-scheme: light;
+
+    --c-canvas: 245 246 249;
+    --c-surface: 255 255 255;
+    --c-elevated: 249 250 252;
+    --c-line: 227 230 236;
+
+    --c-ink: 16 19 26;
+    --c-ink-soft: 88 97 112;
+    --c-ink-faint: 136 144 158;
+
+    --c-accent: 38 88 230;
+    --c-accent-soft: 232 238 254;
+    --c-accent-ink: 255 255 255;
+
+    --c-income: 20 138 88;
+    --c-expense: 205 59 59;
+    --c-debt: 176 118 22;
+    --c-warn: 176 118 22;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans;
+    /* Гумове відтягування сторінки на iOS під час скролу списків виглядає
+       як баг у standalone-режимі PWA. */
+    overscroll-behavior-y: none;
+  }
+
+  /* Цифри у фінансових показниках не повинні «стрибати» при оновленні. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: rgb(var(--c-accent) / 0.3);
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    @apply outline-none;
+    font: inherit;
+  }
+
+  /* Підказка браузера про автозаповнення ламає темний фон полів. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: rgb(var(--c-ink));
+    -webkit-box-shadow: 0 0 0 1000px rgb(var(--c-elevated)) inset;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(var(--date-icon-invert, 1));
+    opacity: 0.5;
+  }
+
+  :root[data-theme='light'] {
+    --date-icon-invert: 0;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-line bg-elevated px-3.5 py-3 text-[0.9375rem] text-ink
+           transition-colors placeholder:text-ink-faint
+           focus:border-accent focus:ring-4 focus:ring-accent/15;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-medium text-ink-soft;
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-3
+           text-[0.9375rem] font-medium transition-all duration-150
+           active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-accent-ink shadow-glow hover:brightness-110;
+  }
+
+  .btn-secondary {
+    @apply btn border border-line bg-elevated text-ink hover:border-ink-faint;
+  }
+
+  .btn-ghost {
+    @apply btn px-3 text-ink-soft hover:bg-elevated hover:text-ink;
+  }
+
+  .btn-danger {
+    @apply btn border border-expense/30 bg-expense/10 text-expense hover:bg-expense/15;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+
+  /* Нижня навігація фіксована, тож контент потребує відступу знизу. */
+  .page {
+    @apply mx-auto w-full max-w-2xl px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3;
+  }
+}
+
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  /* Прибирає горизонтальний скрол у рядках-каруселях на вузьких екранах. */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Recharts малює фокусну рамку на SVG — у мобільному UI це зайве. */
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none;
+}
