@@ -244,7 +244,6 @@ describe('інваріанти схеми', () => {
   });
 
   it('не дає закрити один рядок графіка кредиту двома плановими платежами', async () => {
-    const acc = await makeAccount(alice, 0, 'Кредитний');
     await expect(
       asUser(db, alice, async (c) => {
         const loan = (

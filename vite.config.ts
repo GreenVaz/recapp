@@ -27,10 +27,11 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Recharts важкий — тримаємо окремо, щоб перший екран вантажився швидше.
-          charts: ['recharts'],
-          vendor: ['react', 'react-dom', 'react-router-dom'],
+        // Recharts важкий — тримаємо окремо, щоб перший екран вантажився швидше.
+        manualChunks(id: string) {
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) return 'charts';
+          if (/node_modules\/(react|react-dom|react-router)/.test(id)) return 'vendor';
+          return undefined;
         },
       },
     },
