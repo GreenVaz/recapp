@@ -25,10 +25,31 @@ async function readBody(req: IncomingMessage): Promise<Buffer | undefined> {
   return chunks.length ? Buffer.concat(chunks) : undefined;
 }
 
+/**
+ * Відновлює оригінальний шлях запиту після rewrite.
+ *
+ * Vercel передає функції шлях ПРИЗНАЧЕННЯ, а не той, що запитав браузер,
+ * тож після rewrite роутер побачив би /api/index замість /api/auth/me.
+ * vercel.json кладе справжній шлях у __path, і тут ми його повертаємо на
+ * місце, зберігаючи решту параметрів запиту.
+ *
+ * Локально й у тестах __path відсутній — адреса лишається як є.
+ */
+function restoreOriginalPath(url: URL): URL {
+  const forwarded = url.searchParams.get('__path');
+  if (!forwarded || !forwarded.startsWith('/')) return url;
+
+  const restored = new URL(forwarded, url.origin);
+  for (const [key, value] of url.searchParams) {
+    if (key !== '__path') restored.searchParams.append(key, value);
+  }
+  return restored;
+}
+
 export function toRequest(req: IncomingMessage, body: Buffer | undefined): Request {
   const host = req.headers.host ?? 'localhost';
   const protocol = (req.headers['x-forwarded-proto'] as string | undefined) ?? 'http';
-  const url = new URL(req.url ?? '/', `${protocol}://${host}`);
+  const url = restoreOriginalPath(new URL(req.url ?? '/', `${protocol}://${host}`));
 
   const headers = new Headers();
   for (const [key, value] of Object.entries(req.headers)) {
