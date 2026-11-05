@@ -124,6 +124,17 @@ Mobile-first PWA для планування особистих фінансів
 У контейнері його немає, тому `playwright.config.ts` задає Chromium явно
 й бере від пресетів лише розмір екрана.
 
+**Vercel не створює функцію з `api/[...path].ts`.** Catch-all у стилі
+Next для звичайного проєкту не розгортається в маршрут — `/api/*` віддає
+404, а в логах збірки просто немає кроку збирання функції. Тому точка
+входу називається `api/index.ts`, а оригінальний шлях приходить у
+параметрі `__path`, який підставляє rewrite із `vercel.json` і відновлює
+`restoreOriginalPath()` в адаптері.
+
+**Імпорти з розширенням `.ts` ламають продакшн.** Vercel компілює файл у
+`.js`, а специфікатор лишає незмінним; Node ESM шукає неіснуючий `.ts`.
+Пишемо `.js` — див. AGENTS.md.
+
 **`npm` 10 падає з `Cannot read properties of null (reading 'edgesOut')`**
 на цьому дереві залежностей. Потрібен npm 11+.
 
@@ -140,8 +151,16 @@ Mobile-first PWA для планування особистих фінансів
 | --- | --- | --- |
 | Репозиторій | `GreenVaz/recapp`, гілка `claude/personal-finance-tracker-6e4207` | ✅ |
 | Хостинг | Vercel, проєкт `recapp` (команда `mulatka`) | ✅ |
+| Адреса гілки | `recapp-git-claude-personal-finance-tracker-6e4207-mulatka.vercel.app` | ✅ стабільна |
 | `AUTH_SECRET` | Vercel → Environment Variables | ✅ встановлено |
+| Vercel Authentication | вимкнено, застосунок відкритий публічно | ✅ |
 | База даних | Neon | ⛔ **потребує дії власника** |
+
+Продакшн-адреса `recapp-gilt.vercel.app` досі віддає порожній початковий
+коміт: production-гілка проєкту — `main`, а робота ведеться в
+`claude/personal-finance-tracker-6e4207`. Щоб коротка адреса почала
+віддавати застосунок, гілку треба злити в `main` або змінити
+production-гілку в налаштуваннях Vercel.
 
 ### Що лишилося зробити власнику
 
