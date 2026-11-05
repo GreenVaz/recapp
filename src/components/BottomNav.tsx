@@ -129,9 +129,12 @@ function Tab({
       end={end}
       className={({ isActive }) =>
         cn(
-          // Знизу відступ менший: під ним уже є безпечна зона під домашній
-          // індикатор, і симетричний padding робив смугу зайво високою.
-          'flex flex-col items-center gap-1 pb-1.5 pt-2.5 text-[0.625rem] font-medium transition-colors',
+          // Висота рядка підігнана під нативну таб-панель iOS: 49pt вмісту
+          // плюс безпечна зона під домашній індикатор. Знизу відступ майже
+          // нульовий — там уже починається та сама безпечна зона, і
+          // симетричний padding лише піднімав іконки, через що панель
+          // виглядала порожньою внизу.
+          'flex flex-col items-center gap-1 pb-0.5 pt-2 text-[0.625rem] font-medium transition-colors',
           isActive ? 'text-accent' : 'text-ink-faint',
         )
       }
