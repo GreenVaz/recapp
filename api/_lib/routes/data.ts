@@ -23,16 +23,25 @@ const ACCOUNTS_WITH_BALANCE = `
   left join account_balances b on b.account_id = a.id
 `;
 
+/**
+ * Запити йдуть по черзі, а не через Promise.all.
+ *
+ * Conn — це одне з'єднання. Паралельні виклики `query()` на ньому
+ * node-postgres ставить у ту саму чергу, тож виграшу в швидкості немає
+ * взагалі, зате є попередження про використання клієнта, який уже
+ * виконує запит, — а в pg@9 така поведінка зникне зовсім.
+ */
 async function loadWorkspace(c: Conn, userId: string) {
-  const [accounts, categories, settings, profile, rates] = await Promise.all([
-    c.query(`${ACCOUNTS_WITH_BALANCE} order by a.is_archived, a.sort_order`),
-    c.query(`select * from categories order by kind, sort_order, name`),
-    c.query(`select * from user_settings where user_id = $1`, [userId]),
-    c.query<{ display_name: string | null }>(`select display_name from profiles where user_id = $1`, [
-      userId,
-    ]),
-    c.query<{ base: string; quote: string; rate: string }>(`select base, quote, rate from exchange_rates`),
-  ]);
+  const accounts = await c.query(`${ACCOUNTS_WITH_BALANCE} order by a.is_archived, a.sort_order`);
+  const categories = await c.query(`select * from categories order by kind, sort_order, name`);
+  const settings = await c.query(`select * from user_settings where user_id = $1`, [userId]);
+  const profile = await c.query<{ display_name: string | null }>(
+    `select display_name from profiles where user_id = $1`,
+    [userId],
+  );
+  const rates = await c.query<{ base: string; quote: string; rate: string }>(
+    `select base, quote, rate from exchange_rates`,
+  );
 
   return {
     accounts: accounts.rows.map(mapAccount),
@@ -93,24 +102,23 @@ guarded('GET', '/api/ledger', async ({ db, userId, url }) => {
   if (from > to) throw badRequest('Початок періоду пізніше за кінець');
 
   const result = await asUser(db, userId, async (c) => {
-    const [transactions, rules, exceptions, dues] = await Promise.all([
-      c.query(
-        `select * from transactions where occurred_on between $1 and $2
+    // По черзі: одне з'єднання, паралельність уявна (див. loadWorkspace).
+    const transactions = await c.query(
+      `select * from transactions where occurred_on between $1 and $2
          order by occurred_on, created_at`,
-        [from, to],
-      ),
-      c.query(`select * from recurring_rules where is_active`),
-      c.query(`select * from recurring_exceptions`),
-      c.query(
+      [from, to],
+    );
+    const rules = await c.query(`select * from recurring_rules where is_active`);
+    const exceptions = await c.query(`select * from recurring_exceptions`);
+    const dues = await c.query(
         `select s.*, l.name as loan_name, l.currency as loan_currency,
                 l.account_id as loan_account_id, l.category_id as loan_category_id
          from loan_payment_schedules s
          join loans l on l.id = s.loan_id
          where s.due_on between $1 and $2 and s.status in ('pending','partial')
          order by s.due_on`,
-        [from, to],
-      ),
-    ]);
+      [from, to],
+    );
 
     return {
       from,
@@ -138,23 +146,17 @@ guarded('GET', '/api/export', async ({ db, userId, url }) => {
   const format = url.searchParams.get('format') ?? 'json';
 
   const data = await asUser(db, userId, async (c) => {
-    const tables = await Promise.all([
-      c.query(`select * from accounts order by sort_order`),
-      c.query(`select * from categories order by kind, sort_order`),
-      c.query(`select * from transactions order by occurred_on`),
-      c.query(`select * from recurring_rules`),
-      c.query(`select * from recurring_exceptions`),
-      c.query(`select * from loans`),
-      c.query(`select * from loan_payment_schedules order by loan_id, seq`),
-      c.query(`select * from loan_payments order by paid_on`),
-      c.query(`select * from exchange_rates`),
-      c.query(`select * from user_settings where user_id = $1`, [userId]),
-    ]);
-
-    const [
-      accounts, categories, transactions, rules, exceptions,
-      loans, schedules, payments, rates, settings,
-    ] = tables;
+    // По черзі: одне з'єднання, паралельність уявна (див. loadWorkspace).
+    const accounts = await c.query(`select * from accounts order by sort_order`);
+    const categories = await c.query(`select * from categories order by kind, sort_order`);
+    const transactions = await c.query(`select * from transactions order by occurred_on`);
+    const rules = await c.query(`select * from recurring_rules`);
+    const exceptions = await c.query(`select * from recurring_exceptions`);
+    const loans = await c.query(`select * from loans`);
+    const schedules = await c.query(`select * from loan_payment_schedules order by loan_id, seq`);
+    const payments = await c.query(`select * from loan_payments order by paid_on`);
+    const rates = await c.query(`select * from exchange_rates`);
+    const settings = await c.query(`select * from user_settings where user_id = $1`, [userId]);
 
     return {
       version: EXPORT_VERSION,
