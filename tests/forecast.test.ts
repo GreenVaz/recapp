@@ -8,9 +8,9 @@ import {
   upcomingPayments,
   type ForecastInput,
   type LoanDue,
-} from '@core/forecast.ts';
-import { buildSchedule } from '@core/loans.ts';
-import type { RecurringRule, Transaction } from '@core/types.ts';
+} from '@core/forecast.js';
+import { buildSchedule } from '@core/loans.js';
+import type { RecurringRule, Transaction } from '@core/types.js';
 
 const uah = (major: number) => Math.round(major * 100);
 const TODAY = '2026-11-04';

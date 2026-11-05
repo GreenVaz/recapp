@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import { ArrowLeftRight, Check, Search, Trash2 } from 'lucide-react';
-import { formatMoney } from '@core/money.ts';
-import { api, ApiError } from '@/lib/api.ts';
-import { useData } from '@/lib/store.tsx';
-import { cn, formatDate } from '@/lib/format.ts';
-import { BackHeader } from '@/components/AppHeader.tsx';
-import { Card, EmptyState, ErrorNote, FullScreenLoader, Segmented } from '@/components/ui.tsx';
-import { Icon } from '@/components/Icon.tsx';
-import type { Transaction } from '@core/types.ts';
+import { formatMoney } from '@core/money.js';
+import { api, ApiError } from '@/lib/api.js';
+import { useData } from '@/lib/store.js';
+import { cn, formatDate } from '@/lib/format.js';
+import { BackHeader } from '@/components/AppHeader.js';
+import { Card, EmptyState, ErrorNote, FullScreenLoader, Segmented } from '@/components/ui.js';
+import { Icon } from '@/components/Icon.js';
+import type { Transaction } from '@core/types.js';
 
 type Filter = 'all' | 'expense' | 'income' | 'transfer';
 

@@ -1,6 +1,6 @@
-import { PGliteDatabase } from './pglite.ts';
-import { setDb } from '../api/_lib/db/pg.ts';
-import { handle } from '../api/_lib/router.ts';
+import { PGliteDatabase } from './pglite.js';
+import { setDb } from '../api/_lib/db/pg.js';
+import { handle } from '../api/_lib/router.js';
 
 /**
  * Піднімає справжній API поверх PostgreSQL у пам'яті.

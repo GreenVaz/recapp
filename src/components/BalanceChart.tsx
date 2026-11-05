@@ -1,6 +1,6 @@
 import { Area, AreaChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { formatMoney } from '@core/money.ts';
-import { formatShortDate } from '@/lib/format.ts';
+import { formatMoney } from '@core/money.js';
+import { formatShortDate } from '@/lib/format.js';
 
 /**
  * Графік залишку. Винесений в окремий модуль і підвантажується ліниво:

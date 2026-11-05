@@ -1,9 +1,9 @@
-import { asUser } from '../db/types.ts';
-import { badRequest, json, noContent, notFound, readJson } from '../http.ts';
-import { mapTransaction, toMoneyParam } from '../mappers.ts';
-import { transactionCreateSchema, transactionUpdateSchema } from '../schemas.ts';
-import { buildUpdate, defined } from '../sql.ts';
-import { guarded } from '../router.ts';
+import { asUser } from '../db/types.js';
+import { badRequest, json, noContent, notFound, readJson } from '../http.js';
+import { mapTransaction, toMoneyParam } from '../mappers.js';
+import { transactionCreateSchema, transactionUpdateSchema } from '../schemas.js';
+import { buildUpdate, defined } from '../sql.js';
+import { guarded } from '../router.js';
 
 guarded('GET', '/api/transactions', async ({ db, userId, url }) => {
   const sp = url.searchParams;

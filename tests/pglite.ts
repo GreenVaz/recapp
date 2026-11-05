@@ -1,6 +1,6 @@
 import { PGlite } from '@electric-sql/pglite';
-import type { Conn, Database, QueryResult } from '../api/_lib/db/types.ts';
-import { runMigrations } from '../api/_lib/db/migrate.ts';
+import type { Conn, Database, QueryResult } from '../api/_lib/db/types.js';
+import { runMigrations } from '../api/_lib/db/migrate.js';
 
 /**
  * PostgreSQL у пам'яті для тестів.

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Wallet } from 'lucide-react';
-import { api, ApiError } from '@/lib/api.ts';
-import { useData } from '@/lib/store.tsx';
-import { Field, TextField } from '@/components/fields.tsx';
-import { ErrorNote, Segmented } from '@/components/ui.tsx';
+import { api, ApiError } from '@/lib/api.js';
+import { useData } from '@/lib/store.js';
+import { Field, TextField } from '@/components/fields.js';
+import { ErrorNote, Segmented } from '@/components/ui.js';
 
 type Mode = 'login' | 'register';
 

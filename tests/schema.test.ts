@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PGliteDatabase } from './pglite.ts';
-import { asUser } from '../api/_lib/db/types.ts';
+import { PGliteDatabase } from './pglite.js';
+import { asUser } from '../api/_lib/db/types.js';
 
 /**
  * Перевіряє інваріанти, які тримає сама БД, а не код застосунку.

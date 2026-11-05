@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { createClient, signUp, startTestApi, stopTestApi, type ApiClient } from './api-harness.ts';
-import type { Account, Category, Transaction } from '@core/types.ts';
+import { createClient, signUp, startTestApi, stopTestApi, type ApiClient } from './api-harness.js';
+import type { Account, Category, Transaction } from '@core/types.js';
 
 const uah = (major: number) => Math.round(major * 100);
 

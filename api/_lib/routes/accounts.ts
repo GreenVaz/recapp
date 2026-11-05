@@ -1,9 +1,9 @@
-import { asUser } from '../db/types.ts';
-import { badRequest, conflict, json, noContent, notFound, readJson } from '../http.ts';
-import { mapAccount, toMoneyParam } from '../mappers.ts';
-import { accountCreateSchema, accountUpdateSchema, balanceAdjustSchema } from '../schemas.ts';
-import { guarded } from '../router.ts';
-import { today } from '../../../src/core/dates.ts';
+import { asUser } from '../db/types.js';
+import { badRequest, conflict, json, noContent, notFound, readJson } from '../http.js';
+import { mapAccount, toMoneyParam } from '../mappers.js';
+import { accountCreateSchema, accountUpdateSchema, balanceAdjustSchema } from '../schemas.js';
+import { guarded } from '../router.js';
+import { today } from '../../../src/core/dates.js';
 
 const SELECT = `
   select a.*, coalesce(b.balance, a.initial_balance) as balance

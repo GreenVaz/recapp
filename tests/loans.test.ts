@@ -7,9 +7,9 @@ import {
   ScheduleError,
   summarizeLoan,
   type ScheduleSpec,
-} from '@core/loans.ts';
-import { toNumeric } from '@core/money.ts';
-import type { LoanPayment, ScheduleRow } from '@core/types.ts';
+} from '@core/loans.js';
+import { toNumeric } from '@core/money.js';
+import type { LoanPayment, ScheduleRow } from '@core/types.js';
 
 const uah = (major: number) => Math.round(major * 100);
 

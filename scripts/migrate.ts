@@ -1,5 +1,5 @@
-import { getDb } from '../api/_lib/db/pg.ts';
-import { runMigrations } from '../api/_lib/db/migrate.ts';
+import { getDb } from '../api/_lib/db/pg.js';
+import { runMigrations } from '../api/_lib/db/migrate.js';
 
 /**
  * Ручний запуск міграцій: `npm run db:migrate`.

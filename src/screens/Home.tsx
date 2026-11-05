@@ -8,16 +8,16 @@ import {
   TrendingDown,
   TrendingUp,
 } from 'lucide-react';
-import { addMonths, endOfMonth, startOfMonth } from '@core/dates.ts';
-import { formatMoney } from '@core/money.ts';
-import { nextIncome, overdueEvents, summarize, upcomingPayments } from '@core/forecast.ts';
-import { useData } from '@/lib/store.tsx';
-import { cn, formatRelativeDay, formatShortDate, plural } from '@/lib/format.ts';
-import { AppHeader } from '@/components/AppHeader.tsx';
-import { Card, EmptyState, FullScreenLoader, SectionTitle } from '@/components/ui.tsx';
-import { Icon } from '@/components/Icon.tsx';
+import { addMonths, endOfMonth, startOfMonth } from '@core/dates.js';
+import { formatMoney } from '@core/money.js';
+import { nextIncome, overdueEvents, summarize, upcomingPayments } from '@core/forecast.js';
+import { useData } from '@/lib/store.js';
+import { cn, formatRelativeDay, formatShortDate, plural } from '@/lib/format.js';
+import { AppHeader } from '@/components/AppHeader.js';
+import { Card, EmptyState, FullScreenLoader, SectionTitle } from '@/components/ui.js';
+import { Icon } from '@/components/Icon.js';
 
-const BalanceChart = lazy(() => import('@/components/BalanceChart.tsx'));
+const BalanceChart = lazy(() => import('@/components/BalanceChart.js'));
 
 export function HomeScreen() {
   const { data, forecastResult, baseCurrency, today } = useData();

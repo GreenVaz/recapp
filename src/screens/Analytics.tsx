@@ -13,15 +13,15 @@ import {
   YAxis,
 } from 'recharts';
 import { ChartPie } from 'lucide-react';
-import { addMonths, endOfMonth, monthKey, startOfMonth, type DateISO } from '@core/dates.ts';
-import { formatMoney } from '@core/money.ts';
-import { summarize } from '@core/forecast.ts';
-import { HORIZONS, horizonRange, type HorizonKey } from '@core/forecast.ts';
-import { useData } from '@/lib/store.tsx';
-import { cn, MONTHS_SHORT, formatShortDate } from '@/lib/format.ts';
-import { AppHeader } from '@/components/AppHeader.tsx';
-import { Card, EmptyState, FullScreenLoader, SectionTitle, Segmented } from '@/components/ui.tsx';
-import { Icon } from '@/components/Icon.tsx';
+import { addMonths, endOfMonth, monthKey, startOfMonth, type DateISO } from '@core/dates.js';
+import { formatMoney } from '@core/money.js';
+import { summarize } from '@core/forecast.js';
+import { HORIZONS, horizonRange, type HorizonKey } from '@core/forecast.js';
+import { useData } from '@/lib/store.js';
+import { cn, MONTHS_SHORT, formatShortDate } from '@/lib/format.js';
+import { AppHeader } from '@/components/AppHeader.js';
+import { Card, EmptyState, FullScreenLoader, SectionTitle, Segmented } from '@/components/ui.js';
+import { Icon } from '@/components/Icon.js';
 
 type Period = 'month' | 'prev' | '3m' | '6m' | 'year' | 'custom';
 

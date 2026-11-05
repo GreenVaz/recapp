@@ -1,10 +1,10 @@
-import { asUser } from '../db/types.ts';
-import { badRequest, json, noContent, notFound, readJson } from '../http.ts';
-import { mapException, mapRule, mapTransaction, toMoneyParam } from '../mappers.ts';
-import { occurrenceEditSchema, recurringCreateSchema, recurringUpdateSchema } from '../schemas.ts';
-import { buildUpdate, defined } from '../sql.ts';
-import { guarded } from '../router.ts';
-import { expandRule } from '../../../src/core/recurrence.ts';
+import { asUser } from '../db/types.js';
+import { badRequest, json, noContent, notFound, readJson } from '../http.js';
+import { mapException, mapRule, mapTransaction, toMoneyParam } from '../mappers.js';
+import { occurrenceEditSchema, recurringCreateSchema, recurringUpdateSchema } from '../schemas.js';
+import { buildUpdate, defined } from '../sql.js';
+import { guarded } from '../router.js';
+import { expandRule } from '../../../src/core/recurrence.js';
 import { z } from 'zod';
 
 guarded('GET', '/api/recurring', async ({ db, userId }) => {

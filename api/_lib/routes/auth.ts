@@ -6,18 +6,18 @@ import {
   sessionCookie,
   signToken,
   verifyPassword,
-} from '../auth.ts';
-import { asSystem, asUser, type Conn } from '../db/types.ts';
-import { DEFAULT_RATES, EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../defaults.ts';
-import { badRequest, json, noContent, readJson, unauthorized } from '../http.ts';
-import { sendPasswordReset } from '../mail.ts';
+} from '../auth.js';
+import { asSystem, asUser, type Conn } from '../db/types.js';
+import { DEFAULT_RATES, EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../defaults.js';
+import { badRequest, json, noContent, readJson, unauthorized } from '../http.js';
+import { sendPasswordReset } from '../mail.js';
 import {
   changePasswordSchema,
   credentialsSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from '../schemas.ts';
-import { guarded, open } from '../router.ts';
+} from '../schemas.js';
+import { guarded, open } from '../router.js';
 
 const RESET_TTL_MINUTES = 60;
 

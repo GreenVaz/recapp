@@ -1,7 +1,7 @@
-import { addDays, type DateISO, eachDay, max as maxDate, min as minDate } from './dates.ts';
-import { type Minor, type RateTable, toBase } from './money.ts';
-import { expandRules, occurrenceKey } from './recurrence.ts';
-import type { RecurringException, RecurringRule, ScheduleRow, Transaction } from './types.ts';
+import { addDays, type DateISO, eachDay, max as maxDate, min as minDate } from './dates.js';
+import { type Minor, type RateTable, toBase } from './money.js';
+import { expandRules, occurrenceKey } from './recurrence.js';
+import type { RecurringException, RecurringRule, ScheduleRow, Transaction } from './types.js';
 
 /**
  * Прогноз щоденного залишку.

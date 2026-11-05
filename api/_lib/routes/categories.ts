@@ -1,9 +1,9 @@
-import { asUser } from '../db/types.ts';
-import { badRequest, json, noContent, notFound, readJson } from '../http.ts';
-import { mapCategory } from '../mappers.ts';
-import { categoryCreateSchema, categoryUpdateSchema } from '../schemas.ts';
-import { buildUpdate, defined } from '../sql.ts';
-import { guarded } from '../router.ts';
+import { asUser } from '../db/types.js';
+import { badRequest, json, noContent, notFound, readJson } from '../http.js';
+import { mapCategory } from '../mappers.js';
+import { categoryCreateSchema, categoryUpdateSchema } from '../schemas.js';
+import { buildUpdate, defined } from '../sql.js';
+import { guarded } from '../router.js';
 
 guarded('GET', '/api/categories', async ({ db, userId, url }) => {
   const kind = url.searchParams.get('kind');

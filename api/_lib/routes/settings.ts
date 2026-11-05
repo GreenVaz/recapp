@@ -1,8 +1,8 @@
-import { asUser } from '../db/types.ts';
-import { json, readJson } from '../http.ts';
-import { mapSettings } from '../mappers.ts';
-import { ratesUpdateSchema, settingsUpdateSchema } from '../schemas.ts';
-import { guarded } from '../router.ts';
+import { asUser } from '../db/types.js';
+import { json, readJson } from '../http.js';
+import { mapSettings } from '../mappers.js';
+import { ratesUpdateSchema, settingsUpdateSchema } from '../schemas.js';
+import { guarded } from '../router.js';
 
 async function readSettings(db: Parameters<typeof asUser>[0], userId: string) {
   return asUser(db, userId, async (c) => {

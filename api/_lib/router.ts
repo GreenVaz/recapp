@@ -1,8 +1,8 @@
-import type { Database } from './db/types.ts';
-import { getDb } from './db/pg.ts';
-import { ensureMigrated } from './db/migrate.ts';
-import { badRequest, notFound, toErrorResponse } from './http.ts';
-import { requireSession } from './auth.ts';
+import type { Database } from './db/types.js';
+import { getDb } from './db/pg.js';
+import { ensureMigrated } from './db/migrate.js';
+import { badRequest, notFound, toErrorResponse } from './http.js';
+import { requireSession } from './auth.js';
 
 /** Мінімальний роутер поверх вебстандартних Request/Response. */
 
@@ -70,15 +70,15 @@ async function loadRoutes(): Promise<void> {
   routesLoaded = true;
   // Реєстрація маршрутів — побічний ефект імпорту модулів.
   await Promise.all([
-    import('./routes/auth.ts'),
-    import('./routes/accounts.ts'),
-    import('./routes/categories.ts'),
-    import('./routes/transactions.ts'),
-    import('./routes/recurring.ts'),
-    import('./routes/loans.ts'),
-    import('./routes/settings.ts'),
-    import('./routes/data.ts'),
-    import('./routes/import.ts'),
+    import('./routes/auth.js'),
+    import('./routes/accounts.js'),
+    import('./routes/categories.js'),
+    import('./routes/transactions.js'),
+    import('./routes/recurring.js'),
+    import('./routes/loans.js'),
+    import('./routes/settings.js'),
+    import('./routes/data.js'),
+    import('./routes/import.js'),
   ]);
 }
 

@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { formatMoney, type Minor } from '@core/money.ts';
-import { addMonths, today as todayISO } from '@core/dates.ts';
-import { buildSchedule, type ScheduleSpec } from '@core/loans.ts';
-import { api, ApiError } from '@/lib/api.ts';
-import { useData } from '@/lib/store.tsx';
-import { BackHeader } from '@/components/AppHeader.tsx';
-import { Card, ErrorNote, FullScreenLoader, Segmented } from '@/components/ui.tsx';
+import { formatMoney, type Minor } from '@core/money.js';
+import { addMonths, today as todayISO } from '@core/dates.js';
+import { buildSchedule, type ScheduleSpec } from '@core/loans.js';
+import { api, ApiError } from '@/lib/api.js';
+import { useData } from '@/lib/store.js';
+import { BackHeader } from '@/components/AppHeader.js';
+import { Card, ErrorNote, FullScreenLoader, Segmented } from '@/components/ui.js';
 import {
   AccountPicker,
   AmountInput,
@@ -16,7 +16,7 @@ import {
   NumberField,
   SelectField,
   TextField,
-} from '@/components/fields.tsx';
+} from '@/components/fields.js';
 
 type Kind = 'expense' | 'income' | 'transfer' | 'adjust' | 'recurring' | 'loan';
 

@@ -15,10 +15,10 @@ import {
   parts,
   startOfMonth,
   type DateISO,
-} from '@core/dates.ts';
-import { formatMoney } from '@core/money.ts';
-import { forecast, type ForecastDay, type ForecastEvent } from '@core/forecast.ts';
-import { useData } from '@/lib/store.tsx';
+} from '@core/dates.js';
+import { formatMoney } from '@core/money.js';
+import { forecast, type ForecastDay, type ForecastEvent } from '@core/forecast.js';
+import { useData } from '@/lib/store.js';
 import {
   cn,
   formatCellAmount,
@@ -26,11 +26,11 @@ import {
   formatMonthTitle,
   formatRelativeDay,
   WEEKDAYS_SHORT,
-} from '@/lib/format.ts';
-import { AppHeader } from '@/components/AppHeader.tsx';
-import { Card, EmptyState, FullScreenLoader, Segmented } from '@/components/ui.tsx';
-import { Sheet } from '@/components/Sheet.tsx';
-import { Icon } from '@/components/Icon.tsx';
+} from '@/lib/format.js';
+import { AppHeader } from '@/components/AppHeader.js';
+import { Card, EmptyState, FullScreenLoader, Segmented } from '@/components/ui.js';
+import { Sheet } from '@/components/Sheet.js';
+import { Icon } from '@/components/Icon.js';
 
 export function CalendarScreen() {
   const { data, ledger, baseCurrency, rates, today, ensureRange, forecastResult } = useData();

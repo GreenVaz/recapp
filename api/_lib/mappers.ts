@@ -1,4 +1,4 @@
-import { parseNumeric, toNumeric, type Minor } from '../../src/core/money.ts';
+import { parseNumeric, toNumeric, type Minor } from '../../src/core/money.js';
 import type {
   Account,
   Category,
@@ -9,7 +9,7 @@ import type {
   ScheduleRow,
   Transaction,
   UserSettings,
-} from '../../src/core/types.ts';
+} from '../../src/core/types.js';
 
 /**
  * Межа між PostgreSQL і доменними типами.

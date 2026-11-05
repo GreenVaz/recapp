@@ -1,5 +1,5 @@
-import type { DateISO, MonthEndPolicy } from './dates.ts';
-import type { Minor } from './money.ts';
+import type { DateISO, MonthEndPolicy } from './dates.js';
+import type { Minor } from './money.js';
 
 /** Доменні типи фінансового рушія. Жодних залежностей від React чи БД. */
 

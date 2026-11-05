@@ -11,7 +11,7 @@ import {
   monthGrid,
   startOfWeek,
   today,
-} from '@core/dates.ts';
+} from '@core/dates.js';
 import {
   formatMoney,
   fromMajor,
@@ -21,7 +21,7 @@ import {
   sumInBase,
   toBase,
   toNumeric,
-} from '@core/money.ts';
+} from '@core/money.js';
 
 describe('дати', () => {
   it('знає довжину місяців і високосні роки', () => {

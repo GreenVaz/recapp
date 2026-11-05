@@ -1,16 +1,16 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Check, Trash2, TriangleAlert, Undo2 } from 'lucide-react';
-import { formatMoney, type Minor } from '@core/money.ts';
-import { api, ApiError } from '@/lib/api.ts';
-import { useData } from '@/lib/store.tsx';
-import { cn, formatDate, formatRelativeDay, formatShortDate } from '@/lib/format.ts';
-import { BackHeader } from '@/components/AppHeader.tsx';
-import { Card, ErrorNote, FullScreenLoader, Progress, Segmented } from '@/components/ui.tsx';
-import { Sheet } from '@/components/Sheet.tsx';
-import { AmountInput, DateField, Field, SelectField } from '@/components/fields.tsx';
-import type { LoanBundle } from '@/lib/types.ts';
-import type { ScheduleRow } from '@core/types.ts';
+import { formatMoney, type Minor } from '@core/money.js';
+import { api, ApiError } from '@/lib/api.js';
+import { useData } from '@/lib/store.js';
+import { cn, formatDate, formatRelativeDay, formatShortDate } from '@/lib/format.js';
+import { BackHeader } from '@/components/AppHeader.js';
+import { Card, ErrorNote, FullScreenLoader, Progress, Segmented } from '@/components/ui.js';
+import { Sheet } from '@/components/Sheet.js';
+import { AmountInput, DateField, Field, SelectField } from '@/components/fields.js';
+import type { LoanBundle } from '@/lib/types.js';
+import type { ScheduleRow } from '@core/types.js';
 
 export function LoanDetailScreen() {
   const { id } = useParams<{ id: string }>();

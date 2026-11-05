@@ -1,4 +1,4 @@
-import * as m0001 from './0001_init.ts';
+import * as m0001 from './0001_init.js';
 
 /**
  * Реєстр міграцій у порядку застосування.

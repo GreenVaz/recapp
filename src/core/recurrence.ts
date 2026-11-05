@@ -6,9 +6,9 @@ import {
   type DateISO,
   isSameOrAfter,
   isSameOrBefore,
-} from './dates.ts';
-import type { Minor } from './money.ts';
-import type { RecurringException, RecurringRule } from './types.ts';
+} from './dates.js';
+import type { Minor } from './money.js';
+import type { RecurringException, RecurringRule } from './types.js';
 
 /**
  * Розгортання регулярних правил у конкретні дати.

@@ -5,9 +5,9 @@ import {
   type MonthEndPolicy,
   fromParts,
   parts,
-} from './dates.ts';
-import { type Minor, percentOf, roundHalfAwayFromZero, splitEvenly } from './money.ts';
-import type { Loan, LoanPayment, ScheduleRow, ScheduleType } from './types.ts';
+} from './dates.js';
+import { type Minor, percentOf, roundHalfAwayFromZero, splitEvenly } from './money.js';
+import type { Loan, LoanPayment, ScheduleRow, ScheduleType } from './types.js';
 
 /**
  * Графіки погашення кредитів і розстрочок.

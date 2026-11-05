@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Settings, User } from 'lucide-react';
-import { useData } from '@/lib/store.tsx';
+import { useData } from '@/lib/store.js';
 
 /** Верхній рядок екрана: заголовок і вхід у налаштування через профіль. */
 export function AppHeader({ title, subtitle }: { title: string; subtitle?: string }) {

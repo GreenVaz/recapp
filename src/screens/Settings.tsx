@@ -12,13 +12,13 @@ import {
   Upload,
   Wallet,
 } from 'lucide-react';
-import { api, ApiError } from '@/lib/api.ts';
-import { useData } from '@/lib/store.tsx';
-import { useTheme } from '@/lib/theme.tsx';
-import { AppHeader } from '@/components/AppHeader.tsx';
-import { Card, ErrorNote, FullScreenLoader, SectionTitle, Segmented } from '@/components/ui.tsx';
-import { Sheet } from '@/components/Sheet.tsx';
-import { Field, NumberField, SelectField, TextField } from '@/components/fields.tsx';
+import { api, ApiError } from '@/lib/api.js';
+import { useData } from '@/lib/store.js';
+import { useTheme } from '@/lib/theme.js';
+import { AppHeader } from '@/components/AppHeader.js';
+import { Card, ErrorNote, FullScreenLoader, SectionTitle, Segmented } from '@/components/ui.js';
+import { Sheet } from '@/components/Sheet.js';
+import { Field, NumberField, SelectField, TextField } from '@/components/fields.js';
 
 interface ImportReport {
   applied: boolean;

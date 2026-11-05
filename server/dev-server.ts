@@ -2,8 +2,8 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { nodeHandler } from '../api/_lib/node-adapter.ts';
-import { setDb } from '../api/_lib/db/pg.ts';
+import { nodeHandler } from '../api/_lib/node-adapter.js';
+import { setDb } from '../api/_lib/db/pg.js';
 
 /**
  * Локальний сервер для `npm run dev` і для E2E-перевірок.
@@ -33,7 +33,7 @@ async function useInMemoryDatabase(): Promise<void> {
   process.env.AUTH_SECRET ??= 'local-development-secret-change-me-please';
 
   const { PGlite } = await import('@electric-sql/pglite');
-  const { runMigrations } = await import('../api/_lib/db/migrate.ts');
+  const { runMigrations } = await import('../api/_lib/db/migrate.js');
   const pg = await PGlite.create();
 
   let depth = 0;

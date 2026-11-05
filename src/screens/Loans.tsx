@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useMemo } from 'react';
 import { Landmark, Plus } from 'lucide-react';
-import { formatMoney } from '@core/money.ts';
-import { useData } from '@/lib/store.tsx';
-import { cn, formatDate, formatShortDate, formatRelativeDay, plural } from '@/lib/format.ts';
-import { AppHeader } from '@/components/AppHeader.tsx';
-import { Card, EmptyState, FullScreenLoader, Progress } from '@/components/ui.tsx';
-import type { LoanBundle } from '@/lib/types.ts';
+import { formatMoney } from '@core/money.js';
+import { useData } from '@/lib/store.js';
+import { cn, formatDate, formatShortDate, formatRelativeDay, plural } from '@/lib/format.js';
+import { AppHeader } from '@/components/AppHeader.js';
+import { Card, EmptyState, FullScreenLoader, Progress } from '@/components/ui.js';
+import type { LoanBundle } from '@/lib/types.js';
 
 const KIND_LABEL: Record<string, string> = {
   loan: 'Кредит',

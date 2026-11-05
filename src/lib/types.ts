@@ -1,6 +1,6 @@
-import type { DateISO } from '@core/dates.ts';
-import type { LoanDue } from '@core/forecast.ts';
-import type { LoanSummary } from '@core/loans.ts';
+import type { DateISO } from '@core/dates.js';
+import type { LoanDue } from '@core/forecast.js';
+import type { LoanSummary } from '@core/loans.js';
 import type {
   Account,
   Category,
@@ -11,7 +11,7 @@ import type {
   ScheduleRow,
   Transaction,
   UserSettings,
-} from '@core/types.ts';
+} from '@core/types.js';
 
 /** Форми відповідей API, якими користується інтерфейс. */
 

@@ -12,8 +12,8 @@ import {
   House,
   CalendarClock,
 } from 'lucide-react';
-import { cn } from '@/lib/format.ts';
-import { Sheet } from './Sheet.tsx';
+import { cn } from '@/lib/format.js';
+import { Sheet } from './Sheet.js';
 
 const TABS = [
   { to: '/', label: 'Головна', icon: House, end: true },

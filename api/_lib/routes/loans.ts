@@ -1,22 +1,22 @@
-import { asUser, type Conn } from '../db/types.ts';
-import { badRequest, json, noContent, notFound, readJson } from '../http.ts';
+import { asUser, type Conn } from '../db/types.js';
+import { badRequest, json, noContent, notFound, readJson } from '../http.js';
 import {
   mapLoan,
   mapLoanPayment,
   mapScheduleRow,
   toMoneyParam,
-} from '../mappers.ts';
-import { loanCreateSchema, loanPaymentSchema, loanUpdateSchema } from '../schemas.ts';
-import { buildUpdate, defined } from '../sql.ts';
-import { guarded, pathParam } from '../router.ts';
+} from '../mappers.js';
+import { loanCreateSchema, loanPaymentSchema, loanUpdateSchema } from '../schemas.js';
+import { buildUpdate, defined } from '../sql.js';
+import { guarded, pathParam } from '../router.js';
 import {
   allocatePayment,
   buildSchedule,
   rebuildRemaining,
   summarizeLoan,
   type ScheduleSpec,
-} from '../../../src/core/loans.ts';
-import type { Loan, ScheduleRow } from '../../../src/core/types.ts';
+} from '../../../src/core/loans.js';
+import type { Loan, ScheduleRow } from '../../../src/core/types.js';
 
 /** Ставку користувач вводить річну або місячну — усередині завжди річна. */
 function normalizeRate(rateInput: number | null | undefined, period: string | null | undefined): number | null {

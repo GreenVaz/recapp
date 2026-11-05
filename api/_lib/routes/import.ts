@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
-import { asUser } from '../db/types.ts';
-import { json, readJson } from '../http.ts';
-import { importSchema } from '../schemas.ts';
-import { guarded } from '../router.ts';
+import { asUser } from '../db/types.js';
+import { json, readJson } from '../http.js';
+import { importSchema } from '../schemas.js';
+import { guarded } from '../router.js';
 
 /**
  * Імпорт резервної копії.

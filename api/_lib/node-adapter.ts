@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { handle } from './router.ts';
+import { handle } from './router.js';
 
 /**
  * Міст між Node-подібним API (Vercel-функція, локальний node:http) і

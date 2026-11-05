@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { nodeHandler } from './_lib/node-adapter.ts';
+import { nodeHandler } from './_lib/node-adapter.js';
 
 /**
  * Єдина serverless-функція на весь API.

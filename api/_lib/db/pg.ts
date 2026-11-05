@@ -1,5 +1,5 @@
 import pg from 'pg';
-import type { Conn, Database, QueryResult } from './types.ts';
+import type { Conn, Database, QueryResult } from './types.js';
 
 /**
  * PostgreSQL через node-postgres. Працює і з Neon, і з локальним Postgres.

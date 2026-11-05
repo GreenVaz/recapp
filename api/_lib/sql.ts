@@ -1,4 +1,4 @@
-import { badRequest } from './http.ts';
+import { badRequest } from './http.js';
 
 /**
  * Складає UPDATE із набору змінених полів.

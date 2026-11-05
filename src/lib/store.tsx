@@ -8,11 +8,11 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { addMonths, endOfMonth, startOfMonth, today as todayISO, type DateISO } from '@core/dates.ts';
-import { forecast, type ForecastResult } from '@core/forecast.ts';
-import type { RateTable } from '@core/money.ts';
-import { api, ApiError } from './api.ts';
-import type { Bootstrap, Ledger, Me } from './types.ts';
+import { addMonths, endOfMonth, startOfMonth, today as todayISO, type DateISO } from '@core/dates.js';
+import { forecast, type ForecastResult } from '@core/forecast.js';
+import type { RateTable } from '@core/money.js';
+import { api, ApiError } from './api.js';
+import type { Bootstrap, Ledger, Me } from './types.js';
 
 /**
  * Єдине джерело даних для всього інтерфейсу.

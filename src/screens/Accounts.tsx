@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Archive, ArchiveRestore, Pencil, Plus, Scale, Trash2, Wallet } from 'lucide-react';
-import { formatMoney, type Minor } from '@core/money.ts';
-import { api, ApiError } from '@/lib/api.ts';
-import { useData } from '@/lib/store.tsx';
-import { cn } from '@/lib/format.ts';
-import { BackHeader } from '@/components/AppHeader.tsx';
-import { Card, EmptyState, ErrorNote, FullScreenLoader } from '@/components/ui.tsx';
-import { Sheet } from '@/components/Sheet.tsx';
-import { AmountInput, Field, SelectField, TextField } from '@/components/fields.tsx';
-import { COLOR_CHOICES, Icon, ICON_CHOICES } from '@/components/Icon.tsx';
-import type { Account } from '@core/types.ts';
+import { formatMoney, type Minor } from '@core/money.js';
+import { api, ApiError } from '@/lib/api.js';
+import { useData } from '@/lib/store.js';
+import { cn } from '@/lib/format.js';
+import { BackHeader } from '@/components/AppHeader.js';
+import { Card, EmptyState, ErrorNote, FullScreenLoader } from '@/components/ui.js';
+import { Sheet } from '@/components/Sheet.js';
+import { AmountInput, Field, SelectField, TextField } from '@/components/fields.js';
+import { COLOR_CHOICES, Icon, ICON_CHOICES } from '@/components/Icon.js';
+import type { Account } from '@core/types.js';
 
 const TYPE_LABEL: Record<string, string> = {
   card: 'Банківська картка',

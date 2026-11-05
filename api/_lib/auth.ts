@@ -1,5 +1,5 @@
 import { webcrypto as crypto } from 'node:crypto';
-import { parseCookies, serializeCookie, unauthorized } from './http.ts';
+import { parseCookies, serializeCookie, unauthorized } from './http.js';
 
 /**
  * Автентифікація без зовнішніх залежностей: усе будується на Web Crypto,

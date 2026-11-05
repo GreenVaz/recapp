@@ -1,5 +1,5 @@
-import { asUser, type Conn } from '../db/types.ts';
-import { badRequest, json } from '../http.ts';
+import { asUser, type Conn } from '../db/types.js';
+import { badRequest, json } from '../http.js';
 import {
   mapAccount,
   mapCategory,
@@ -10,10 +10,10 @@ import {
   mapScheduleRow,
   mapSettings,
   mapTransaction,
-} from '../mappers.ts';
-import { rangeSchema } from '../schemas.ts';
-import { guarded } from '../router.ts';
-import { summarizeLoan } from '../../../src/core/loans.ts';
+} from '../mappers.js';
+import { rangeSchema } from '../schemas.js';
+import { guarded } from '../router.js';
+import { summarizeLoan } from '../../../src/core/loans.js';
 
 const EXPORT_VERSION = 1;
 

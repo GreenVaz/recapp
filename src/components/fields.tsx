@@ -1,9 +1,9 @@
 import { useId, useMemo, useState, type ReactNode } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { fromMajor, toMajor, type Minor } from '@core/money.ts';
-import type { Account, Category } from '@/lib/types.ts';
-import { cn } from '@/lib/format.ts';
-import { Icon } from './Icon.tsx';
+import { fromMajor, toMajor, type Minor } from '@core/money.js';
+import type { Account, Category } from '@/lib/types.js';
+import { cn } from '@/lib/format.js';
+import { Icon } from './Icon.js';
 
 /** Поля форм. Усі оптимізовані під введення однією рукою на телефоні. */
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/format.ts';
+import { cn } from '@/lib/format.js';
 
 /**
  * Нижня шторка — основний спосіб показати деталі на телефоні.

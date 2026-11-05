@@ -1,5 +1,5 @@
-import { MIGRATIONS } from '../../../db/migrations/index.ts';
-import type { Conn, Database } from './types.ts';
+import { MIGRATIONS } from '../../../db/migrations/index.js';
+import type { Conn, Database } from './types.js';
 
 /**
  * Ідемпотентний застосовувач міграцій.

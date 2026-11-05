@@ -1,25 +1,25 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { WifiOff } from 'lucide-react';
-import { useData } from './lib/store.tsx';
-import { BottomNav } from './components/BottomNav.tsx';
-import { FullScreenLoader } from './components/ui.tsx';
-import { AuthScreen } from './screens/Auth.tsx';
-import { HomeScreen } from './screens/Home.tsx';
+import { useData } from './lib/store.js';
+import { BottomNav } from './components/BottomNav.js';
+import { FullScreenLoader } from './components/ui.js';
+import { AuthScreen } from './screens/Auth.js';
+import { HomeScreen } from './screens/Home.js';
 
 /**
  * Екрани поза головною підвантажуються на вимогу. Перший запуск на
  * мобільному зв'язку тягне лише те, що видно одразу, а не весь застосунок.
  */
-const CalendarScreen = lazy(() => import('./screens/Calendar.tsx').then((m) => ({ default: m.CalendarScreen })));
-const LoansScreen = lazy(() => import('./screens/Loans.tsx').then((m) => ({ default: m.LoansScreen })));
-const LoanDetailScreen = lazy(() => import('./screens/LoanDetail.tsx').then((m) => ({ default: m.LoanDetailScreen })));
-const AnalyticsScreen = lazy(() => import('./screens/Analytics.tsx').then((m) => ({ default: m.AnalyticsScreen })));
-const SettingsScreen = lazy(() => import('./screens/Settings.tsx').then((m) => ({ default: m.SettingsScreen })));
-const AccountsScreen = lazy(() => import('./screens/Accounts.tsx').then((m) => ({ default: m.AccountsScreen })));
-const CategoriesScreen = lazy(() => import('./screens/Categories.tsx').then((m) => ({ default: m.CategoriesScreen })));
-const TransactionsScreen = lazy(() => import('./screens/Transactions.tsx').then((m) => ({ default: m.TransactionsScreen })));
-const NewEntryScreen = lazy(() => import('./screens/NewEntry.tsx').then((m) => ({ default: m.NewEntryScreen })));
+const CalendarScreen = lazy(() => import('./screens/Calendar.js').then((m) => ({ default: m.CalendarScreen })));
+const LoansScreen = lazy(() => import('./screens/Loans.js').then((m) => ({ default: m.LoansScreen })));
+const LoanDetailScreen = lazy(() => import('./screens/LoanDetail.js').then((m) => ({ default: m.LoanDetailScreen })));
+const AnalyticsScreen = lazy(() => import('./screens/Analytics.js').then((m) => ({ default: m.AnalyticsScreen })));
+const SettingsScreen = lazy(() => import('./screens/Settings.js').then((m) => ({ default: m.SettingsScreen })));
+const AccountsScreen = lazy(() => import('./screens/Accounts.js').then((m) => ({ default: m.AccountsScreen })));
+const CategoriesScreen = lazy(() => import('./screens/Categories.js').then((m) => ({ default: m.CategoriesScreen })));
+const TransactionsScreen = lazy(() => import('./screens/Transactions.js').then((m) => ({ default: m.TransactionsScreen })));
+const NewEntryScreen = lazy(() => import('./screens/NewEntry.js').then((m) => ({ default: m.NewEntryScreen })));
 
 export function App() {
   const { status, error, isOffline, reload } = useData();

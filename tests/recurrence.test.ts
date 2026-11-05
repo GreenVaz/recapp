@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { expandRule, expandRules, nextOccurrence } from '@core/recurrence.ts';
-import type { RecurringException, RecurringRule } from '@core/types.ts';
+import { expandRule, expandRules, nextOccurrence } from '@core/recurrence.js';
+import type { RecurringException, RecurringRule } from '@core/types.js';
 
 const rule = (over: Partial<RecurringRule> = {}): RecurringRule => ({
   id: 'r1',
