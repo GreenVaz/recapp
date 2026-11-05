@@ -79,6 +79,7 @@ async function loadRoutes(): Promise<void> {
     import('./routes/settings.js'),
     import('./routes/data.js'),
     import('./routes/import.js'),
+    import('./routes/monobank.js'),
   ]);
 }
 

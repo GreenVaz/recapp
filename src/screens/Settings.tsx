@@ -17,6 +17,7 @@ import { useData } from '@/lib/store.js';
 import { useTheme } from '@/lib/theme.js';
 import { AppHeader } from '@/components/AppHeader.js';
 import { Card, ErrorNote, FullScreenLoader, SectionTitle, Segmented } from '@/components/ui.js';
+import { MonobankCard } from '@/components/MonobankCard.js';
 import { Sheet } from '@/components/Sheet.js';
 import { Field, NumberField, SelectField, TextField } from '@/components/fields.js';
 
@@ -195,6 +196,8 @@ export function SettingsScreen() {
           </button>
         </div>
       </Card>
+
+      <MonobankCard />
 
       <Card className="mb-3">
         <SectionTitle title="Дані" hint="Резервна копія і перенесення" />

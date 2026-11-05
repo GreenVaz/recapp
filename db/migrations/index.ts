@@ -1,4 +1,5 @@
 import * as m0001 from './0001_init.js';
+import * as m0002 from './0002_bank_sync.js';
 
 /**
  * Реєстр міграцій у порядку застосування.
@@ -11,4 +12,7 @@ export interface Migration {
   sql: string;
 }
 
-export const MIGRATIONS: readonly Migration[] = [{ name: m0001.name, sql: m0001.sql }];
+export const MIGRATIONS: readonly Migration[] = [
+  { name: m0001.name, sql: m0001.sql },
+  { name: m0002.name, sql: m0002.sql },
+];

@@ -320,3 +320,33 @@ export const importSchema = z.object({
     settings: z.record(z.string(), z.unknown()).optional(),
   }),
 });
+
+// ─── Підключення банку ──────────────────────────────────────────────────
+
+export const monobankConnectSchema = z.object({
+  /** Персональний токен з api.monobank.ua. Формат банк не документує,
+   *  тож перевіряємо лише очевидне — решту скаже сам банк. */
+  token: z.string().trim().min(20, 'Токен закороткий').max(200, 'Токен задовгий'),
+  /** Наскільки глибоко тягнути історію. Кожні 31 день — окремий запит,
+   *  а банк дозволяє один запит на хвилину, тож глибина = час очікування. */
+  months: z.number().int().min(1).max(24).default(12),
+});
+
+/** Те, що банк шле на вебхук. Усе зайве ігноруємо свідомо. */
+export const monobankWebhookSchema = z.object({
+  type: z.string(),
+  data: z.object({
+    account: z.string(),
+    statementItem: z.object({
+      id: z.string(),
+      time: z.number(),
+      description: z.string().optional().default(''),
+      mcc: z.number().optional().default(0),
+      hold: z.boolean().optional().default(false),
+      amount: z.number(),
+      operationAmount: z.number().optional().default(0),
+      currencyCode: z.number().optional().default(980),
+      comment: z.string().optional(),
+    }),
+  }),
+});

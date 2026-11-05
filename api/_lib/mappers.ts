@@ -30,8 +30,14 @@ const money = (v: unknown): Minor => parseNumeric(v as string);
 const moneyOrNull = (v: unknown): Minor | null =>
   v === null || v === undefined ? null : parseNumeric(v as string);
 
-/** DATE з драйвера вже рядок 'YYYY-MM-DD'; підстраховуємося на Date. */
-const date = (v: unknown): string => {
+/**
+ * DATE з драйвера вже рядок 'YYYY-MM-DD'; підстраховуємося на Date.
+ *
+ * Експортується, бо та сама нормалізація потрібна поза маперами: PGlite у
+ * тестах віддає DATE обʼєктом, node-postgres у проді — рядком, і код, який
+ * очікує лише рядок, ламається рівно на тестах.
+ */
+export const toDateISO = (v: unknown): string => {
   if (v instanceof Date) {
     return `${v.getUTCFullYear()}-${String(v.getUTCMonth() + 1).padStart(2, '0')}-${String(
       v.getUTCDate(),
@@ -39,6 +45,7 @@ const date = (v: unknown): string => {
   }
   return String(v ?? '').slice(0, 10);
 };
+const date = toDateISO;
 const dateOrNull = (v: unknown): string | null => (v === null || v === undefined ? null : date(v));
 
 export const toMoneyParam = (minor: Minor): string => toNumeric(minor);
