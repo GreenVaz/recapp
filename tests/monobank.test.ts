@@ -10,6 +10,8 @@ import {
   planWindows,
   signedAmount,
   toTransactionDraft,
+  midRate,
+  ratesFromMono,
   type MonoStatementItem,
 } from '@core/monobank.js';
 
@@ -179,5 +181,49 @@ describe('назви', () => {
   it('банка підписана своєю назвою', () => {
     expect(jarTitle({ id: 'j', title: 'На кварту', currencyCode: 980, balance: 0 }))
       .toBe('Банка «На кварту»');
+  });
+});
+
+describe('курси валют', () => {
+  const usd = { currencyCodeA: 840, currencyCodeB: 980, date: 0, rateBuy: 41.2, rateSell: 41.8 };
+  const eur = { currencyCodeA: 978, currencyCodeB: 980, date: 0, rateBuy: 47.5, rateSell: 48.5 };
+
+  it('бере середину між купівлею і продажем', () => {
+    expect(midRate(usd)).toBeCloseTo(41.5, 6);
+    expect(midRate(eur)).toBeCloseTo(48.0, 6);
+  });
+
+  it('для валют без обміну бере кроскурс', () => {
+    expect(midRate({ currencyCodeA: 826, currencyCodeB: 980, date: 0, rateCross: 55.3 })).toBe(55.3);
+  });
+
+  it('без жодного курсу повертає null, а не нуль', () => {
+    expect(midRate({ currencyCodeA: 826, currencyCodeB: 980, date: 0 })).toBeNull();
+  });
+
+  it('витягає лише потрібні пари до гривні', () => {
+    const rows = ratesFromMono([
+      usd,
+      eur,
+      // USD до EUR — не наша пара.
+      { currencyCodeA: 840, currencyCodeB: 978, date: 0, rateCross: 0.86 },
+      // Валюта, якої застосунок не підтримує.
+      { currencyCodeA: 392, currencyCodeB: 980, date: 0, rateCross: 0.27 },
+    ]);
+
+    expect(rows).toEqual([
+      { base: 'USD', quote: 'UAH', rate: 41.5 },
+      { base: 'EUR', quote: 'UAH', rate: 48 },
+    ]);
+  });
+
+  it('порожня відповідь не ламає розбір', () => {
+    expect(ratesFromMono([])).toEqual([]);
+  });
+
+  it('запис із нульовим курсом відкидається', () => {
+    expect(
+      ratesFromMono([{ currencyCodeA: 840, currencyCodeB: 980, date: 0, rateCross: 0 }]),
+    ).toEqual([]);
   });
 });

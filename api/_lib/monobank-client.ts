@@ -12,7 +12,11 @@
  * на безкоштовному тарифі, де фонових задач немає.
  */
 
-import type { MonoClientInfo, MonoStatementItem } from '../../src/core/monobank.js';
+import type {
+  MonoClientInfo,
+  MonoCurrencyRate,
+  MonoStatementItem,
+} from '../../src/core/monobank.js';
 
 const BASE_URL = 'https://api.monobank.ua';
 const TIMEOUT_MS = 20_000;
@@ -131,4 +135,32 @@ export function setWebhook(token: string, url: string, fetcher: Fetcher = fetch)
 /** Порожня адреса відписує вебхук — так банк перестає слати оновлення. */
 export function clearWebhook(token: string, fetcher: Fetcher = fetch): Promise<unknown> {
   return setWebhook(token, '', fetcher);
+}
+
+/**
+ * Публічні курси банку. Токен не потрібен — і не надсилається.
+ *
+ * Банк оновлює їх не частіше ніж раз на 5 хвилин і на частіші запити
+ * відповідає 429, тож викликати це має сенс лише з перевіркою давності.
+ */
+export async function fetchCurrencyRates(fetcher: Fetcher = fetch): Promise<MonoCurrencyRate[]> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await fetcher(`${BASE_URL}/bank/currency`, { signal: controller.signal });
+  } catch {
+    throw new MonobankError('Не вдалося отримати курси банку', 0);
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (response.status === 429) {
+    throw new MonobankError('Банк оновлює курси раз на 5 хвилин — спробуйте пізніше', 429, 300);
+  }
+  if (!response.ok) {
+    throw new MonobankError(`Банк відповів помилкою ${response.status}`, response.status);
+  }
+  return (await response.json()) as MonoCurrencyRate[];
 }

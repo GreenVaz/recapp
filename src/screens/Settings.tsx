@@ -5,6 +5,7 @@ import {
   Download,
   LogOut,
   Moon,
+  RefreshCw,
   Sun,
   SunMoon,
   Tags,
@@ -331,6 +332,7 @@ function RatesEditor() {
   const { data, run, baseCurrency } = useData();
   const [drafts, setDrafts] = useState<Record<string, number | null>>({});
   const [busy, setBusy] = useState(false);
+  const [pullError, setPullError] = useState<string | null>(null);
 
   const others = ['UAH', 'USD', 'EUR'].filter((c) => c !== baseCurrency);
 
@@ -354,6 +356,20 @@ function RatesEditor() {
 
       await run(() => api.put('/api/settings/rates', { rates }));
       setDrafts({});
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Тягне курси з Monobank. Токен не потрібен — endpoint публічний. */
+  async function pullFromBank() {
+    setBusy(true);
+    setPullError(null);
+    try {
+      await run(() => api.post('/api/monobank/rates?force=1'));
+      setDrafts({});
+    } catch (e) {
+      setPullError(e instanceof ApiError ? e.message : 'Не вдалося отримати курси');
     } finally {
       setBusy(false);
     }
@@ -386,6 +402,22 @@ function RatesEditor() {
         Без курсу суми в цій валюті не потраплять у підсумки — застосунок покаже попередження, а не
         складе різні валюти як рівні.
       </p>
+
+      <button
+        type="button"
+        onClick={() => void pullFromBank()}
+        disabled={busy}
+        className="btn-secondary mt-2 w-full disabled:opacity-50"
+      >
+        <RefreshCw size={15} className={busy ? 'animate-spin' : undefined} />
+        Оновити з Monobank
+      </button>
+
+      <p className="mt-1.5 text-[0.6875rem] text-ink-faint">
+        Береться середина між курсом купівлі та продажу банку. Банк оновлює їх раз на 5 хвилин.
+      </p>
+
+      <ErrorNote message={pullError} />
 
       {changed && (
         <button type="button" onClick={save} disabled={busy} className="btn-secondary mt-2 w-full">

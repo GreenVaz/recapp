@@ -329,3 +329,78 @@ describe('ізоляція між користувачами', () => {
     expect(after.total).toBe(before.total); // дані нікуди не зникли
   });
 });
+
+describe('курси валют', () => {
+  const RATES = [
+    // Навмисно відрізняються від стартових 41.5 / 45, інакше тест не довів
+    // би, що курси справді замінилися.
+    { currencyCodeA: 840, currencyCodeB: 980, date: 0, rateBuy: 42.1, rateSell: 42.9 },
+    { currencyCodeA: 978, currencyCodeB: 980, date: 0, rateBuy: 47.5, rateSell: 48.5 },
+  ];
+
+  function stubRates(onCall?: () => void) {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string | URL | Request) => {
+        const url = String(input);
+        if (url.endsWith('/bank/currency')) {
+          onCall?.();
+          return new Response(JSON.stringify(RATES), { status: 200 });
+        }
+        return new Response('{}', { status: 404 });
+      }),
+    );
+  }
+
+  it('замінює стартові курси банківськими', async () => {
+    stubRates();
+    const { client } = await signUp();
+
+    const before = await client.get<{ rates: Array<{ base: string; rate: number }> }>('/api/settings');
+    expect(before.rates.find((r) => r.base === 'USD')!.rate).toBe(41.5); // стартове значення
+
+    const result = await client.post<{ status: string; rates: Array<{ base: string; rate: number }> }>(
+      '/api/monobank/rates?force=1',
+    );
+
+    expect(result.status).toBe('updated');
+    // Середина між 42.1 і 42.9 — і це вже не стартові 41.5.
+    expect(result.rates.find((r) => r.base === 'USD')!.rate).toBe(42.5);
+    expect(result.rates.find((r) => r.base === 'EUR')!.rate).toBe(48);
+  });
+
+  it('не смикає банк частіше, ніж той оновлює курси', async () => {
+    let calls = 0;
+    stubRates(() => { calls += 1; });
+    const { client } = await signUp();
+
+    await client.post('/api/monobank/rates?force=1');
+    expect(calls).toBe(1);
+
+    // Без force свіжі курси віддаються з бази.
+    const again = await client.post<{ status: string }>('/api/monobank/rates');
+    expect(again.status).toBe('fresh');
+    expect(calls).toBe(1);
+  });
+
+  it('працює без підключеного банку — endpoint курсів публічний', async () => {
+    stubRates();
+    const { client } = await signUp();
+
+    const status = await client.get<{ connected: boolean }>('/api/monobank');
+    expect(status.connected).toBe(false);
+
+    const result = await client.post<{ status: string }>('/api/monobank/rates?force=1');
+    expect(result.status).toBe('updated');
+  });
+
+  it('помилка банку не псує збережені курси', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 500 })));
+    const { client } = await signUp();
+
+    await expect(client.post('/api/monobank/rates?force=1')).rejects.toThrow();
+
+    const after = await client.get<{ rates: Array<{ base: string; rate: number }> }>('/api/settings');
+    expect(after.rates.find((r) => r.base === 'USD')!.rate).toBe(41.5);
+  });
+});

@@ -284,3 +284,72 @@ export function signedAmount(draft: TransactionDraft): Minor {
 export function spanDays(from: DateISO, to: DateISO): number {
   return diffDays(from, to) + 1;
 }
+
+// ─── Курси валют ───────────────────────────────────────────────────────────
+
+/** Відповідь публічного endpoint /bank/currency — токен для нього не потрібен. */
+export interface MonoCurrencyRate {
+  currencyCodeA: number;
+  currencyCodeB: number;
+  date: number;
+  rateSell?: number;
+  rateBuy?: number;
+  rateCross?: number;
+}
+
+/** Банк оновлює курси не частіше ніж раз на 5 хвилин. */
+export const RATES_TTL_MS = 5 * 60_000;
+
+/**
+ * Один курс із запису банку.
+ *
+ * Береться середина між купівлею і продажем. Крайні значення спокусливі,
+ * але обидва викривляють підсумок: за курсом продажу залишок у валюті
+ * виглядає більшим, ніж за нього дадуть, за курсом купівлі — меншим, ніж
+ * коштує. Для оцінки капіталу чесна саме середина.
+ *
+ * Для валют без обміну банк дає лише `rateCross` — тоді він.
+ */
+export function midRate(entry: MonoCurrencyRate): number | null {
+  if (typeof entry.rateBuy === 'number' && typeof entry.rateSell === 'number') {
+    const mid = (entry.rateBuy + entry.rateSell) / 2;
+    return mid > 0 ? mid : null;
+  }
+  if (typeof entry.rateCross === 'number' && entry.rateCross > 0) return entry.rateCross;
+  return null;
+}
+
+export interface RateRow {
+  base: string;
+  quote: string;
+  rate: number;
+}
+
+/**
+ * Витягає з відповіді банку ті пари, які застосунок уміє показувати.
+ *
+ * Усе інше ігнорується свідомо: курс валюти, якої немає в рахунках,
+ * нікуди не підставиш, а зайві рядки лише засмічують налаштування.
+ */
+export function ratesFromMono(
+  entries: readonly MonoCurrencyRate[],
+  wanted: readonly string[] = ['USD', 'EUR'],
+  quote = 'UAH',
+): RateRow[] {
+  const quoteCode = Object.entries(CURRENCY_BY_CODE).find(([, code]) => code === quote)?.[0];
+  if (!quoteCode) return [];
+
+  const rows: RateRow[] = [];
+  for (const entry of entries) {
+    if (String(entry.currencyCodeB) !== quoteCode) continue;
+
+    const base = currencyFromCode(entry.currencyCodeA);
+    if (!base || !wanted.includes(base)) continue;
+
+    const rate = midRate(entry);
+    if (rate === null) continue;
+
+    rows.push({ base, quote, rate: Math.round(rate * 1e6) / 1e6 });
+  }
+  return rows;
+}

@@ -27,7 +27,9 @@ import {
   signedAmount,
   toTransactionDraft,
   currencyFromCode,
+  ratesFromMono,
   RATE_LIMIT_MS,
+  RATES_TTL_MS,
   type MonoClientInfo,
 } from '../../../src/core/monobank.js';
 import { addDays, today as todayISO } from '../../../src/core/dates.js';
@@ -41,6 +43,7 @@ import { decryptSecret, encryptSecret, generateWebhookSecret } from '../secrets.
 import {
   clearWebhook,
   fetchClientInfo,
+  fetchCurrencyRates,
   fetchStatement,
   MonobankError,
   setWebhook,
@@ -219,9 +222,32 @@ guarded('POST', '/api/monobank/connect', async ({ db, userId, request, url }) =>
       [userId, PROVIDER, webhookState, webhookError]),
   );
 
+  // Курси тягнемо одразу: без них валютні рахунки не потраплять у підсумки,
+  // а користувач про це дізнався б не одразу. Окремий endpoint з власним
+  // лімітом, тож на client-info це не впливає. Невдача не критична.
+  let ratesUpdated = 0;
+  try {
+    const rows = ratesFromMono(await fetchCurrencyRates());
+    await asUser(db, userId, async (c) => {
+      for (const row of rows) {
+        await c.query(
+          `insert into exchange_rates (user_id, base, quote, rate)
+           values ($1,$2,$3,$4)
+           on conflict (user_id, base, quote)
+           do update set rate = excluded.rate, updated_at = now()`,
+          [userId, row.base, row.quote, row.rate],
+        );
+      }
+    });
+    ratesUpdated = rows.length;
+  } catch {
+    ratesUpdated = 0;
+  }
+
   return json({
     connected: true,
     clientName: info.name,
+    ratesUpdated,
     accounts: result.accounts,
     windows: result.windows,
     minutesLeft: result.windows,
@@ -461,3 +487,67 @@ open('POST', '/api/monobank/webhook/:secret', async ({ db, params, request }) =>
 
   return new Response('ok', { status: 200 });
 });
+
+// ─── Курси валют ───────────────────────────────────────────────────────────
+
+/**
+ * Підтягує курси з публічного endpoint банку.
+ *
+ * Токен не потрібен, тож маршрут працює і без підключеного банку —
+ * курси корисні самі по собі.
+ *
+ * Банк оновлює їх раз на 5 хвилин і на частіші запити відповідає 429,
+ * тому спершу дивимось, коли оновлювали востаннє. `force` обходить цю
+ * перевірку лише для явного натискання кнопки.
+ */
+guarded('POST', '/api/monobank/rates', async ({ db, userId, url }) => {
+  const force = url.searchParams.get('force') === '1';
+
+  const fresh = await asUser(db, userId, async (c) => {
+    const last = await c.query<{ updated_at: string | Date }>(
+      `select max(updated_at) as updated_at from exchange_rates where user_id = $1`,
+      [userId],
+    );
+    const raw = last.rows[0]?.updated_at;
+    if (!raw) return false;
+    const at = raw instanceof Date ? raw.getTime() : Date.parse(String(raw));
+    return Number.isFinite(at) && Date.now() - at < RATES_TTL_MS;
+  });
+
+  if (fresh && !force) {
+    return json({ status: 'fresh', rates: await readRates(db, userId) });
+  }
+
+  let rows;
+  try {
+    rows = ratesFromMono(await fetchCurrencyRates());
+  } catch (e) {
+    throw badRequest(e instanceof Error ? e.message : 'Банк не віддав курси');
+  }
+
+  if (rows.length === 0) throw badRequest('Банк не повернув потрібних курсів');
+
+  await asUser(db, userId, async (c) => {
+    for (const row of rows) {
+      await c.query(
+        `insert into exchange_rates (user_id, base, quote, rate)
+         values ($1,$2,$3,$4)
+         on conflict (user_id, base, quote)
+         do update set rate = excluded.rate, updated_at = now()`,
+        [userId, row.base, row.quote, row.rate],
+      );
+    }
+  });
+
+  return json({ status: 'updated', rates: await readRates(db, userId) });
+});
+
+async function readRates(db: Parameters<typeof asUser>[0], userId: string) {
+  return asUser(db, userId, async (c) => {
+    const found = await c.query<{ base: string; quote: string; rate: string }>(
+      `select base, quote, rate from exchange_rates where user_id = $1 order by base`,
+      [userId],
+    );
+    return found.rows.map((r) => ({ base: r.base, quote: r.quote, rate: Number(r.rate) }));
+  });
+}
