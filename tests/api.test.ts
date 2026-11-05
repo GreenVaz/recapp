@@ -474,6 +474,59 @@ describe('експорт та імпорт', () => {
     expect(after.total).toBe(1);
   });
 
+  it('однакові операції з одного файлу не схлопуються в одну', async () => {
+    // Три однакові покупки того самого дня — звичайна річ. Раніше імпорт
+    // вважав другу й третю дублями першої, мовчки їх викидав і ламав баланс.
+    const { client } = await signUp();
+    const account = await firstAccount(client);
+    for (let i = 0; i < 3; i += 1) {
+      await client.post('/api/transactions', {
+        kind: 'expense', accountId: account.id, amount: uah(80),
+        occurredOn: '2026-11-02', note: 'Кава',
+      });
+    }
+
+    const backup = await client.get<Record<string, unknown>>('/api/export');
+    const source = await firstAccount(client);
+
+    const target = await signUp();
+    const applied = await target.client.post<{ willAdd: { transactions: number } }>('/api/import', {
+      mode: 'apply',
+      payload: backup,
+    });
+    expect(applied.willAdd.transactions).toBe(3);
+
+    const after = await target.client.get<{ total: number }>('/api/transactions');
+    expect(after.total).toBe(3);
+
+    // Головне: баланс зійшовся з вихідним, а не став на дві кави більшим.
+    const restored = await firstAccount(target.client);
+    expect(restored.balance).toBe(source.balance);
+  });
+
+  it('повторний імпорт не дублює навіть однакові операції', async () => {
+    const { client } = await signUp();
+    const account = await firstAccount(client);
+    for (let i = 0; i < 3; i += 1) {
+      await client.post('/api/transactions', {
+        kind: 'expense', accountId: account.id, amount: uah(80),
+        occurredOn: '2026-11-02', note: 'Кава',
+      });
+    }
+    const backup = await client.get<Record<string, unknown>>('/api/export');
+
+    const target = await signUp();
+    await target.client.post('/api/import', { mode: 'apply', payload: backup });
+    const second = await target.client.post<{ duplicates: { transactions: number } }>('/api/import', {
+      mode: 'apply',
+      payload: backup,
+    });
+    expect(second.duplicates.transactions).toBe(3);
+
+    const after = await target.client.get<{ total: number }>('/api/transactions');
+    expect(after.total).toBe(3);
+  });
+
   it('експорт у CSV віддає файл', async () => {
     const { client } = await signUp();
     const response = await client.request('GET', '/api/export?format=csv');

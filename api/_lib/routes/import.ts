@@ -156,11 +156,14 @@ guarded('POST', '/api/import', async ({ request, db, userId }) => {
     }>(`select account_id, occurred_on, kind, amount, note from transactions`);
     const txKey = (account: string, on: string, kind: string, amount: string, note: string) =>
       `${account}|${on}|${kind}|${Number(amount).toFixed(2)}|${note}`;
-    const txSeen = new Set(
-      existingTransactions.rows.map((r) =>
-        txKey(r.account_id, dateOnly(r.occurred_on), r.kind, r.amount, text(r.note)),
-      ),
-    );
+    // Лічильник, а не множина: однакові операції — нормальна річ (дві однакові
+    // кави того самого дня). Захист від повторного імпорту має пропускати рівно
+    // стільки рядків, скільки вже лежить у базі, а не схлопувати решту файлу.
+    const txSeen = new Map<string, number>();
+    for (const r of existingTransactions.rows) {
+      const key = txKey(r.account_id, dateOnly(r.occurred_on), r.kind, r.amount, text(r.note));
+      txSeen.set(key, (txSeen.get(key) ?? 0) + 1);
+    }
 
     for (const row of payload.transactions as Row[]) {
       const accountId = accountMap.get(text(row.account_id));
@@ -172,11 +175,12 @@ guarded('POST', '/api/import', async ({ request, db, userId }) => {
       const key = txKey(
         accountId, dateOnly(row.occurred_on), text(row.kind), text(row.amount), text(row.note),
       );
-      if (txSeen.has(key)) {
+      const alreadyInDb = txSeen.get(key) ?? 0;
+      if (alreadyInDb > 0) {
+        txSeen.set(key, alreadyInDb - 1);
         dupes.transactions += 1;
         continue;
       }
-      txSeen.add(key);
 
       const id = randomUUID();
       transactionMap.set(text(row.id), id);
