@@ -29,9 +29,9 @@ import {
   currencyFromCode,
   RATE_LIMIT_MS,
   type MonoClientInfo,
-} from '@core/monobank.js';
-import { addDays, today as todayISO } from '@core/dates.js';
-import { toNumeric } from '@core/money.js';
+} from '../../../src/core/monobank.js';
+import { addDays, today as todayISO } from '../../../src/core/dates.js';
+import { toNumeric } from '../../../src/core/money.js';
 import { asSystem, asUser, type Conn } from '../db/types.js';
 import { toDateISO } from '../mappers.js';
 import { badRequest, conflict, json, noContent, notFound, readJson } from '../http.js';

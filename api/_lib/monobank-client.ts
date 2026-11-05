@@ -12,7 +12,7 @@
  * на безкоштовному тарифі, де фонових задач немає.
  */
 
-import type { MonoClientInfo, MonoStatementItem } from '@core/monobank.js';
+import type { MonoClientInfo, MonoStatementItem } from '../../src/core/monobank.js';
 
 const BASE_URL = 'https://api.monobank.ua';
 const TIMEOUT_MS = 20_000;
