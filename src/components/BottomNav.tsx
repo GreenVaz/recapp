@@ -129,7 +129,9 @@ function Tab({
       end={end}
       className={({ isActive }) =>
         cn(
-          'flex flex-col items-center gap-1 py-2.5 text-[0.625rem] font-medium transition-colors',
+          // Знизу відступ менший: під ним уже є безпечна зона під домашній
+          // індикатор, і симетричний padding робив смугу зайво високою.
+          'flex flex-col items-center gap-1 pb-1.5 pt-2.5 text-[0.625rem] font-medium transition-colors',
           isActive ? 'text-accent' : 'text-ink-faint',
         )
       }
